@@ -1,0 +1,218 @@
+---
+title: "Analisis del crecimiento a traves de los ultimos años de una empresa en operaciòn."
+format: html
+geometry:
+      - top=30mm
+      - left=20mm
+      - heightrounded
+---
+
+# Importando librerias 
+
+
+Se realiza la importacion de librerias con las cuales estaremos trabajando durante el analisis de datos.
+```{python}
+
+
+from datetime import datetime
+import glob
+import json
+import os
+from pathlib import Path
+import re
+
+from IPython.display import HTML, display
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import missingno as msno
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import altair as alt
+import calendar
+
+
+import streamlit as st
+```
+ 
+# Lectura de los datos.
+
+```{python}
+#echo : True
+route = "./Data"
+files = [ Path(i) for i in glob.glob(f'{route}/*.csv') ]
+files
+```
+
+```{python}
+#echo : True
+dfs = []
+for csv in files:
+    df = pd.read_csv(csv, delimiter= ',')
+    dfs.append(df)
+
+```
+
+Ignoramos los indices al concatenar para no recibir indices repetidos
+
+```{python}
+data = pd.concat(dfs, ignore_index= True)
+```
+## Creamos una data redefinida con los valores que nos interesan.
+
+```{python}
+#echo : True
+data = data[['Fecha','Razón Social', 'Total', 'Cancelado', 'Nombre de la Moneda', 'Nombre del agente']]
+
+data.Fecha = pd.to_datetime(data.Fecha,format = 'mixed')
+
+```
+
+### Eliminamos valores nulos.
+Comparamos y eliminamos valores nulos si existen dentro de la data correspondiente, en caso de que no sean de nuestro interes y no afecten los resultados de nuestro analisis, los conservamos.
+
+```{python}
+#echo : True
+display(data.index.size)
+display(data.dropna().index.size)
+```
+
+```{python}
+data.info()
+```
+```{python]
+msno.matrix(data)
+msno.bar(data.sample(frac = 0.1))
+```
+### Data Ventas Mxn, Quitando facturas canceladas.º
+```{python}
+data_mxn = data[(data['Nombre de la Moneda'] == "Peso Mexicano") & (data['Cancelado'] == 0)]
+data_mxn.Total = data.Total.astype(float)
+
+grupo_Clientes_Venta = data_mxn.groupby('Razón Social')['Total'].sum()
+clientes_venta_sorting = grupo_Clientes_Venta.sort_values(ascending= False).reset_index().head(30)
+
+```
+
+### Data Ventas dolares.
+
+```{python}
+data_Dls = data[(data['Nombre de la Moneda'] == "Dólar Americano") & (data['Cancelado'] == 0)]
+data_Dls.shape
+```
+
+### ¿Quien nos compra más?
+
+```{python}
+grupo_Clientes_Venta = data_mxn.groupby('Razón Social')['Total'].sum()
+
+```
+
+
+```{python}
+clientes_venta_sorting = grupo_Clientes_Venta.sort_values(ascending= False).reset_index().head(30)
+```
+### 
+
+
+
+```{python}
+grafica_1 = alt.Chart(clientes_venta_sorting).encode(
+    y = alt.X('Razón Social:O', title = "Clientes"),
+    x = alt.Y('Total', title = "Ventas Totales")
+).properties(
+    width = 350
+    
+)
+grafica_1.mark_bar() + grafica_1.mark_text(align =  'left', dx = 0)
+```
+
+
+
+```{python}
+grafica_1.mark_bar() + grafica_1.mark_text(align =  'left', dx = 0)
+```
+
+### Ventas por año.
+
+```{python}
+ventas_anuales = data_mxn.groupby(data_mxn.Fecha.dt.year)['Total'].sum().reset_index()
+
+```
+
+
+### Crecimiento
+```{python}
+
+pElemento = ventas_anuales.Total.iloc[0]
+uElemento = ventas_anuales.Total.iloc[-1]
+
+crecimiento_total = ((uElemento - pElemento) / pElemento ) * 100
+crecimiento_total
+```
+
+
+```{python}
+grafica_2 = alt.Chart(ventas_anuales).mark_line(point = alt.OverlayMarkDef(filled = False, fill = "white", color = "#d62728"), color = "#d62728").encode(
+    x = alt.X("Fecha:N").scale(zero = False),
+    y = alt.Y("Total:Q").scale(zero = False),
+).properties(
+    width = 400,
+    height = 200
+)
+grafica_2
+```
+
+
+```{python}
+contraste_mensual = data_mxn.groupby(data_mxn.Fecha.dt.to_period('M'))['Total'].sum().reset_index()
+contraste_mensual = contraste_mensual.iloc[:-2]
+contraste_mensual['Fecha'] = contraste_mensual['Fecha'].apply(lambda x: x.to_timestamp())
+contraste_mensual['Fecha'] = pd.to_datetime(contraste_mensual['Fecha'], format='%Y-%m')
+```
+```{python}
+contraste_mensual['Año'] = contraste_mensual['Fecha'].dt.year
+contraste_mensual['Mes'] = contraste_mensual['Fecha'].dt.month
+
+highlight = alt.selection_point(
+    on="mouseover", fields=["Año"], nearest=True
+)
+
+base = alt.Chart(contraste_mensual).encode(
+    x= alt.X('Mes:O', title='Mes'),
+    y= alt.Y('Total:Q', title='Total'),
+    color= alt.Color('Año:N')
+).properties(
+    width=600
+)
+points = base.mark_circle().encode(
+    opacity=alt.value(0)
+).add_params(
+    highlight
+).properties(
+    width=600
+)
+
+lines = base.mark_line( point=alt.OverlayMarkDef(filled=False, fill="white")).encode(
+    size=alt.condition(~highlight, alt.value(1), alt.value(3))
+)
+points + lines
+```
+
+
+```{python}
+años_disponibles =  data_mxn['Fecha'].dt.year.unique()
+clientesprincipales_y  = data_mxn[['Fecha', 'Razón Social', 'Total']].reset_index(drop = True)
+
+clientesprincipales_y['Fecha'] = pd.to_datetime(clientesprincipales_y['Fecha'])
+clientesprincipales_y['Fecha'] = clientesprincipales_y['Fecha'].dt.year
+
+clientesprincipales_y = clientesprincipales_y.groupby(['Fecha', 'Razón Social'])['Total'].sum().reset_index()
+clientesprincipales_y = clientesprincipales_y.sort_values(by='Total', ascending=False)
+
+año_seleccionado = 2023
+datos_año_seleccionado = clientesprincipales_y[clientesprincipales_y['Fecha'] == año_seleccionado].head(3)
+datos_año_seleccionado
+total_facturacion = clientesprincipales_y.Total.sum()
+```

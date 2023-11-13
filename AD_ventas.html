@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Analisis del crecimiento a traves de los ultimos años de una empresa en operaciòn.</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="AD_ventas_files/libs/clipboard/clipboard.min.js"></script>
+<script src="AD_ventas_files/libs/quarto-html/quarto.js"></script>
+<script src="AD_ventas_files/libs/quarto-html/popper.min.js"></script>
+<script src="AD_ventas_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="AD_ventas_files/libs/quarto-html/anchor.min.js"></script>
+<link href="AD_ventas_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="AD_ventas_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="AD_ventas_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="AD_ventas_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="AD_ventas_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Analisis del crecimiento a traves de los ultimos años de una empresa en operaciòn.</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>autor:<br>
+Carlos Cano github: CxrlxsCxnx</p>
+<section id="importando-librerias" class="level1">
+<h1>Importando librerias</h1>
+<p>Se realiza la importacion de librerias con las cuales estaremos trabajando durante el analisis de datos.</p>
+<div class="cell" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> HTML, display, Image</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> cm</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> missingno <span class="im">as</span> msno</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> calendar</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> streamlit <span class="im">as</span> st</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="lectura-de-los-datos." class="level1">
+<h1>Lectura de los datos.</h1>
+<div class="cell" data-execution_count="79">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#echo|True</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>route <span class="op">=</span> <span class="st">"./Data"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>files <span class="op">=</span> [ Path(i) <span class="cf">for</span> i <span class="kw">in</span> glob.glob(<span class="ss">f'</span><span class="sc">{</span>route<span class="sc">}</span><span class="ss">/*.csv'</span>) ]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="79">
+<pre><code>[PosixPath('Data/FACTURAS03.csv'),
+ PosixPath('Data/FACTURAS02.csv'),
+ PosixPath('Data/FACTURAS01.csv')]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#echo : True</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dfs <span class="op">=</span> []</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> csv <span class="kw">in</span> files:</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_csv(csv, delimiter<span class="op">=</span> <span class="st">','</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    dfs.append(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ignoramos los indices al concatenar para no recibir indices repetidos</p>
+<div class="cell" data-execution_count="81">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.concat(dfs, ignore_index<span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="creamos-una-data-redefinida-con-los-valores-que-nos-interesan." class="level2">
+<h2 class="anchored" data-anchor-id="creamos-una-data-redefinida-con-los-valores-que-nos-interesan.">Creamos una data redefinida con los valores que nos interesan.</h2>
+<div class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#echo : True</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[[<span class="st">'Fecha'</span>,<span class="st">'Razón Social'</span>, <span class="st">'Total'</span>, <span class="st">'Cancelado'</span>, <span class="st">'Nombre de la Moneda'</span>, <span class="st">'Nombre del agente'</span>]]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>data.Fecha <span class="op">=</span> pd.to_datetime(data.Fecha,<span class="bu">format</span> <span class="op">=</span> <span class="st">'mixed'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="eliminamos-valores-nulos." class="level3">
+<h3 class="anchored" data-anchor-id="eliminamos-valores-nulos.">Eliminamos valores nulos.</h3>
+<p>Comparamos y eliminamos valores nulos si existen dentro de la data correspondiente, en caso de que no sean de nuestro interes y no afecten los resultados de nuestro analisis, los conservamos.</p>
+<div class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#echo : True</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>display(data.index.size)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>display(data.dropna().index.size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>3566</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>3564</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="84">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>display(data.info())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 3566 entries, 0 to 3565
+Data columns (total 6 columns):
+ #   Column               Non-Null Count  Dtype         
+---  ------               --------------  -----         
+ 0   Fecha                3566 non-null   datetime64[ns]
+ 1   Razón Social         3566 non-null   object        
+ 2   Total                3566 non-null   float64       
+ 3   Cancelado            3566 non-null   int64         
+ 4   Nombre de la Moneda  3566 non-null   object        
+ 5   Nombre del agente    3564 non-null   object        
+dtypes: datetime64[ns](1), float64(1), int64(1), object(3)
+memory usage: 167.3+ KB</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>None</code></pre>
+</div>
+</div>
+<p><code>{python] msno.matrix(data) msno.bar(data.sample(frac = 0.1))</code></p>
+</section>
+<section id="data-ventas-mxn-quitando-facturas-canceladas.º" class="level3">
+<h3 class="anchored" data-anchor-id="data-ventas-mxn-quitando-facturas-canceladas.º">Data Ventas Mxn, Quitando facturas canceladas.º</h3>
+<div class="cell" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data_mxn <span class="op">=</span> data[(data[<span class="st">'Nombre de la Moneda'</span>] <span class="op">==</span> <span class="st">"Peso Mexicano"</span>) <span class="op">&amp;</span> (data[<span class="st">'Cancelado'</span>] <span class="op">==</span> <span class="dv">0</span>)]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>data_mxn.Total <span class="op">=</span> data.Total.astype(<span class="bu">float</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>grupo_Clientes_Venta <span class="op">=</span> data_mxn.groupby(<span class="st">'Razón Social'</span>)[<span class="st">'Total'</span>].<span class="bu">sum</span>()</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>clientes_venta_sorting <span class="op">=</span> grupo_Clientes_Venta.sort_values(ascending<span class="op">=</span> <span class="va">False</span>).reset_index().head(<span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_5192/1176312956.py:2: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  data_mxn.Total = data.Total.astype(float)</code></pre>
+</div>
+</div>
+</section>
+<section id="data-ventas-dolares." class="level3">
+<h3 class="anchored" data-anchor-id="data-ventas-dolares.">Data Ventas dolares.</h3>
+<div class="cell" data-execution_count="86">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data_Dls <span class="op">=</span> data[(data[<span class="st">'Nombre de la Moneda'</span>] <span class="op">==</span> <span class="st">"Dólar Americano"</span>) <span class="op">&amp;</span> (data[<span class="st">'Cancelado'</span>] <span class="op">==</span> <span class="dv">0</span>)]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>data_Dls.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="86">
+<pre><code>(43, 6)</code></pre>
+</div>
+</div>
+</section>
+<section id="quien-nos-compra-más" class="level3">
+<h3 class="anchored" data-anchor-id="quien-nos-compra-más">¿Quien nos compra más?</h3>
+<p>Se agrupan los clientes y los totales de compras que han realizado así se puede obtener una vista general de cuantos ingresos se han obtenido de cada uno de ellos y cuales son nuestros clientes más importantes.</p>
+<div class="cell" data-execution_count="87">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>grupo_Clientes_Venta <span class="op">=</span> data_mxn.groupby(<span class="st">'Razón Social'</span>)[<span class="st">'Total'</span>].<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="88">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>clientes_venta_sorting <span class="op">=</span> grupo_Clientes_Venta.sort_values(ascending<span class="op">=</span> <span class="va">False</span>).reset_index().head(<span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Se crea una grafica con altair sobre el grupo realizado anteriormente.</p>
+<div class="cell" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>grafica_1 <span class="op">=</span> alt.Chart(clientes_venta_sorting).encode(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> alt.X(<span class="st">'Razón Social:O'</span>, title <span class="op">=</span> <span class="st">"Clientes"</span>),</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> alt.Y(<span class="st">'Total'</span>, title <span class="op">=</span> <span class="st">"Ventas Totales"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="dv">350</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>grafica_1.mark_bar() <span class="op">+</span> grafica_1.mark_text(align <span class="op">=</span>  <span class="st">'left'</span>, dx <span class="op">=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="89">
+
+<style>
+  #altair-viz-2d053625dc06480a93b3e14a1de67f67.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-2d053625dc06480a93b3e14a1de67f67.vega-embed details,
+  #altair-viz-2d053625dc06480a93b3e14a1de67f67.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-2d053625dc06480a93b3e14a1de67f67"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-2d053625dc06480a93b3e14a1de67f67") {
+      outputDiv = document.getElementById("altair-viz-2d053625dc06480a93b3e14a1de67f67");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.15.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "5.15.1"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"mark": {"type": "bar"}, "encoding": {"x": {"field": "Total", "title": "Ventas Totales", "type": "quantitative"}, "y": {"field": "Raz\u00f3n Social", "title": "Clientes", "type": "ordinal"}}}, {"mark": {"type": "text", "align": "left", "dx": 0}, "encoding": {"x": {"field": "Total", "title": "Ventas Totales", "type": "quantitative"}, "y": {"field": "Raz\u00f3n Social", "title": "Clientes", "type": "ordinal"}}}], "data": {"name": "data-e17e9ea645872aef8ffdd1c61d325d3b"}, "width": 350, "$schema": "https://vega.github.io/schema/vega-lite/v5.15.1.json", "datasets": {"data-e17e9ea645872aef8ffdd1c61d325d3b": [{"Raz\u00f3n Social": "SAGOT", "Total": 7042270.03}, {"Raz\u00f3n Social": "INMOBILIARIA LLUNA", "Total": 3704479.16}, {"Raz\u00f3n Social": "GERARDO ARREDONDO HERNANDEZ", "Total": 2008841.0899999999}, {"Raz\u00f3n Social": "INSTITUTO DEL BAJIO", "Total": 1876324.96}, {"Raz\u00f3n Social": "FUJITA CORPORATION", "Total": 1543112.97}, {"Raz\u00f3n Social": "PRODUCTOS FRUGO", "Total": 1424324.08}, {"Raz\u00f3n Social": "ESCUELA PREPARATORIA LUIS SPOTA", "Total": 884413.46}, {"Raz\u00f3n Social": "VITABAJIO", "Total": 454857.62}, {"Raz\u00f3n Social": "IQFRESH TRANSPORT", "Total": 425182.25}, {"Raz\u00f3n Social": "DISTRIBUIDORA DE MATERIALES TRIANGULO", "Total": 418021.08}, {"Raz\u00f3n Social": "FRUGALMEX", "Total": 411895.39999999997}, {"Raz\u00f3n Social": "REDWINGS", "Total": 400901.84}, {"Raz\u00f3n Social": "INSTITUTO DE INNOVACION", "Total": 360000.0}, {"Raz\u00f3n Social": "MIICA", "Total": 332997.5}, {"Raz\u00f3n Social": "ASOCIACION EDUCATIVA DE SALAMANCA", "Total": 331561.82}, {"Raz\u00f3n Social": "INELBIO ", "Total": 292882.87}, {"Raz\u00f3n Social": "ESTRATEGIAS FINANCIERAS Y DE PROTECCION PATRIMONIAL UNIR", "Total": 246620.06}, {"Raz\u00f3n Social": "TSO Y ASOCIADOS", "Total": 244796.98}, {"Raz\u00f3n Social": "MEGA ASFALTOS", "Total": 219541.65}, {"Raz\u00f3n Social": "DMW MEXICO DIVISION", "Total": 215180.18999999997}, {"Raz\u00f3n Social": "FIMO CONSULTORIA AMBIENTAL", "Total": 145096.66999999998}, {"Raz\u00f3n Social": "ANTONIA NU\u00d1EZ HERNANDEZ", "Total": 141132.86000000002}, {"Raz\u00f3n Social": "HUGO ELOY MARQUEZ DIOSDADO", "Total": 139009.25}, {"Raz\u00f3n Social": "BEAVER TRAILERS DE MEXICO", "Total": 125883.76999999999}, {"Raz\u00f3n Social": "PROAMBIENTE DEL BAJIO ", "Total": 118805.47}, {"Raz\u00f3n Social": "VERDURA VERDE DE SANTIAGO", "Total": 113049.71}, {"Raz\u00f3n Social": "AGROCENTRO BAJIO ", "Total": 111736.16}, {"Raz\u00f3n Social": "EMULSIONES Y PAVIMENTOS DE SINALOA ", "Total": 102273.44}, {"Raz\u00f3n Social": "BIANCA ELIZABETH HERRERA BONILLA", "Total": 94318.54}, {"Raz\u00f3n Social": "INTERCONTINENTAL IMPORT EXPORT ", "Total": 94155.39}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+</section>
+<section id="ventas-por-año." class="level3">
+<h3 class="anchored" data-anchor-id="ventas-por-año.">Ventas por año.</h3>
+<p>Agrupamos las ventas por años para poder ver cuanto porcentaje y que tanto se ha vendido en cada año.</p>
+<div class="cell" data-execution_count="90">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ventas_anuales <span class="op">=</span> data_mxn.groupby(data_mxn.Fecha.dt.year)[<span class="st">'Total'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>ventas_anuales</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="90">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Fecha</th>
+<th data-quarto-table-cell-role="th">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2020</td>
+<td>4729251.56</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2021</td>
+<td>7445951.39</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2022</td>
+<td>7846298.04</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2023</td>
+<td>8563507.47</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="crecimiento" class="level3">
+<h3 class="anchored" data-anchor-id="crecimiento">Crecimiento</h3>
+<p>Seleccionamos el priner y el ultimo ewlemento de ventas_anuales para obtener el crecimiento total de la empresa durante los 4 años.</p>
+<div class="cell" data-execution_count="91">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pElemento <span class="op">=</span> ventas_anuales.Total.iloc[<span class="dv">0</span>]</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>uElemento <span class="op">=</span> ventas_anuales.Total.iloc[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>crecimiento_total <span class="op">=</span> ((uElemento <span class="op">-</span> pElemento) <span class="op">/</span> pElemento ) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>crecimiento_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="91">
+<pre><code>81.07532156737295</code></pre>
+</div>
+</div>
+<p>Para una mejor visualización obtenemos la grafica, la generamos con altair con una mark_line.</p>
+<div class="cell" data-execution_count="92">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>grafica_2 <span class="op">=</span> alt.Chart(ventas_anuales).mark_line(point <span class="op">=</span> alt.OverlayMarkDef(filled <span class="op">=</span> <span class="va">False</span>, fill <span class="op">=</span> <span class="st">"white"</span>, color <span class="op">=</span> <span class="st">"#d62728"</span>), color <span class="op">=</span> <span class="st">"#d62728"</span>).encode(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> alt.X(<span class="st">"Fecha:N"</span>).scale(zero <span class="op">=</span> <span class="va">False</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> alt.Y(<span class="st">"Total:Q"</span>).scale(zero <span class="op">=</span> <span class="va">False</span>),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="dv">400</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    height <span class="op">=</span> <span class="dv">200</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>display(grafica_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+  #altair-viz-d2a0c4ab04e148dea98f96e53ac4bdcd.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-d2a0c4ab04e148dea98f96e53ac4bdcd.vega-embed details,
+  #altair-viz-d2a0c4ab04e148dea98f96e53ac4bdcd.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-d2a0c4ab04e148dea98f96e53ac4bdcd"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-d2a0c4ab04e148dea98f96e53ac4bdcd") {
+      outputDiv = document.getElementById("altair-viz-d2a0c4ab04e148dea98f96e53ac4bdcd");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.15.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "5.15.1"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-7e7d76d35a61797a195f4bd18398c280"}, "mark": {"type": "line", "color": "#d62728", "point": {"color": "#d62728", "fill": "white", "filled": false}}, "encoding": {"x": {"field": "Fecha", "scale": {"zero": false}, "type": "nominal"}, "y": {"field": "Total", "scale": {"zero": false}, "type": "quantitative"}}, "height": 200, "width": 400, "$schema": "https://vega.github.io/schema/vega-lite/v5.15.1.json", "datasets": {"data-7e7d76d35a61797a195f4bd18398c280": [{"Fecha": 2020, "Total": 4729251.56}, {"Fecha": 2021, "Total": 7445951.39}, {"Fecha": 2022, "Total": 7846298.04}, {"Fecha": 2023, "Total": 8563507.47}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>Tambien nos gustaria obtener el contraste de los meses durante el año y como se ha desarrollado, cual es el mes en que más generamos o si hay una tendencia sobre el mes y el consumo de los clientes.</p>
+<div class="cell" data-execution_count="93">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>contraste_mensual <span class="op">=</span> data_mxn.groupby(data_mxn.Fecha.dt.to_period(<span class="st">'M'</span>))[<span class="st">'Total'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>contraste_mensual <span class="op">=</span> contraste_mensual.iloc[:<span class="op">-</span><span class="dv">2</span>]</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>contraste_mensual[<span class="st">'Fecha'</span>] <span class="op">=</span> contraste_mensual[<span class="st">'Fecha'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x.to_timestamp())</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>contraste_mensual[<span class="st">'Fecha'</span>] <span class="op">=</span> pd.to_datetime(contraste_mensual[<span class="st">'Fecha'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'%Y-%m'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="94">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>contraste_mensual[<span class="st">'Año'</span>] <span class="op">=</span> contraste_mensual[<span class="st">'Fecha'</span>].dt.year</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>contraste_mensual[<span class="st">'Mes'</span>] <span class="op">=</span> contraste_mensual[<span class="st">'Fecha'</span>].dt.month</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>highlight <span class="op">=</span> alt.selection_point(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    on<span class="op">=</span><span class="st">"mouseover"</span>, fields<span class="op">=</span>[<span class="st">"Año"</span>], nearest<span class="op">=</span><span class="va">True</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>base <span class="op">=</span> alt.Chart(contraste_mensual).encode(</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span> alt.X(<span class="st">'Mes:O'</span>, title<span class="op">=</span><span class="st">'Mes'</span>),</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span> alt.Y(<span class="st">'Total:Q'</span>, title<span class="op">=</span><span class="st">'Total'</span>),</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span> alt.Color(<span class="st">'Año:N'</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">600</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> base.mark_circle().encode(</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span>alt.value(<span class="dv">0</span>)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>).add_params(</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    highlight</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">600</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> base.mark_line( point<span class="op">=</span>alt.OverlayMarkDef(filled<span class="op">=</span><span class="va">False</span>, fill<span class="op">=</span><span class="st">"white"</span>)).encode(</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>alt.condition(<span class="op">~</span>highlight, alt.value(<span class="dv">1</span>), alt.value(<span class="dv">3</span>))</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>points <span class="op">+</span> lines</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="94">
+
+<style>
+  #altair-viz-51eeacc8332d4305966657b5c743f355.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-51eeacc8332d4305966657b5c743f355.vega-embed details,
+  #altair-viz-51eeacc8332d4305966657b5c743f355.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-51eeacc8332d4305966657b5c743f355"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-51eeacc8332d4305966657b5c743f355") {
+      outputDiv = document.getElementById("altair-viz-51eeacc8332d4305966657b5c743f355");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.15.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "5.15.1"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"mark": {"type": "circle"}, "encoding": {"color": {"field": "A\u00f1o", "type": "nominal"}, "opacity": {"value": 0}, "x": {"field": "Mes", "title": "Mes", "type": "ordinal"}, "y": {"field": "Total", "title": "Total", "type": "quantitative"}}, "name": "view_4"}, {"mark": {"type": "line", "point": {"fill": "white", "filled": false}}, "encoding": {"color": {"field": "A\u00f1o", "type": "nominal"}, "size": {"condition": {"test": {"not": {"param": "param_4"}}, "value": 1}, "value": 3}, "x": {"field": "Mes", "title": "Mes", "type": "ordinal"}, "y": {"field": "Total", "title": "Total", "type": "quantitative"}}}], "data": {"name": "data-8ca36b96b1ec16c0e5f2d84db0c599d0"}, "params": [{"name": "param_4", "select": {"type": "point", "fields": ["A\u00f1o"], "nearest": true, "on": "mouseover"}, "views": ["view_4"]}], "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v5.15.1.json", "datasets": {"data-8ca36b96b1ec16c0e5f2d84db0c599d0": [{"Fecha": "2020-01-01T00:00:00", "Total": 404468.88, "A\u00f1o": 2020, "Mes": 1}, {"Fecha": "2020-02-01T00:00:00", "Total": 389320.56, "A\u00f1o": 2020, "Mes": 2}, {"Fecha": "2020-03-01T00:00:00", "Total": 333543.19, "A\u00f1o": 2020, "Mes": 3}, {"Fecha": "2020-04-01T00:00:00", "Total": 695859.32, "A\u00f1o": 2020, "Mes": 4}, {"Fecha": "2020-05-01T00:00:00", "Total": 236260.11, "A\u00f1o": 2020, "Mes": 5}, {"Fecha": "2020-06-01T00:00:00", "Total": 664254.86, "A\u00f1o": 2020, "Mes": 6}, {"Fecha": "2020-07-01T00:00:00", "Total": 323583.13, "A\u00f1o": 2020, "Mes": 7}, {"Fecha": "2020-08-01T00:00:00", "Total": 199473.2, "A\u00f1o": 2020, "Mes": 8}, {"Fecha": "2020-09-01T00:00:00", "Total": 309190.82, "A\u00f1o": 2020, "Mes": 9}, {"Fecha": "2020-10-01T00:00:00", "Total": 802734.81, "A\u00f1o": 2020, "Mes": 10}, {"Fecha": "2020-11-01T00:00:00", "Total": 144654.45, "A\u00f1o": 2020, "Mes": 11}, {"Fecha": "2020-12-01T00:00:00", "Total": 225908.23, "A\u00f1o": 2020, "Mes": 12}, {"Fecha": "2021-01-01T00:00:00", "Total": 723627.93, "A\u00f1o": 2021, "Mes": 1}, {"Fecha": "2021-02-01T00:00:00", "Total": 191111.11000000002, "A\u00f1o": 2021, "Mes": 2}, {"Fecha": "2021-03-01T00:00:00", "Total": 711067.19, "A\u00f1o": 2021, "Mes": 3}, {"Fecha": "2021-04-01T00:00:00", "Total": 399344.95, "A\u00f1o": 2021, "Mes": 4}, {"Fecha": "2021-05-01T00:00:00", "Total": 796612.9, "A\u00f1o": 2021, "Mes": 5}, {"Fecha": "2021-06-01T00:00:00", "Total": 776933.5, "A\u00f1o": 2021, "Mes": 6}, {"Fecha": "2021-07-01T00:00:00", "Total": 479314.11, "A\u00f1o": 2021, "Mes": 7}, {"Fecha": "2021-08-01T00:00:00", "Total": 1252787.48, "A\u00f1o": 2021, "Mes": 8}, {"Fecha": "2021-09-01T00:00:00", "Total": 805548.96, "A\u00f1o": 2021, "Mes": 9}, {"Fecha": "2021-10-01T00:00:00", "Total": 509502.14, "A\u00f1o": 2021, "Mes": 10}, {"Fecha": "2021-11-01T00:00:00", "Total": 216130.7, "A\u00f1o": 2021, "Mes": 11}, {"Fecha": "2021-12-01T00:00:00", "Total": 583970.42, "A\u00f1o": 2021, "Mes": 12}, {"Fecha": "2022-01-01T00:00:00", "Total": 940469.92, "A\u00f1o": 2022, "Mes": 1}, {"Fecha": "2022-02-01T00:00:00", "Total": 883870.77, "A\u00f1o": 2022, "Mes": 2}, {"Fecha": "2022-03-01T00:00:00", "Total": 717079.12, "A\u00f1o": 2022, "Mes": 3}, {"Fecha": "2022-04-01T00:00:00", "Total": 489341.0, "A\u00f1o": 2022, "Mes": 4}, {"Fecha": "2022-05-01T00:00:00", "Total": 828676.72, "A\u00f1o": 2022, "Mes": 5}, {"Fecha": "2022-06-01T00:00:00", "Total": 371655.32, "A\u00f1o": 2022, "Mes": 6}, {"Fecha": "2022-07-01T00:00:00", "Total": 432785.57, "A\u00f1o": 2022, "Mes": 7}, {"Fecha": "2022-08-01T00:00:00", "Total": 710436.54, "A\u00f1o": 2022, "Mes": 8}, {"Fecha": "2022-09-01T00:00:00", "Total": 939533.83, "A\u00f1o": 2022, "Mes": 9}, {"Fecha": "2022-10-01T00:00:00", "Total": 350364.38, "A\u00f1o": 2022, "Mes": 10}, {"Fecha": "2022-11-01T00:00:00", "Total": 836118.6799999999, "A\u00f1o": 2022, "Mes": 11}, {"Fecha": "2022-12-01T00:00:00", "Total": 345966.19, "A\u00f1o": 2022, "Mes": 12}, {"Fecha": "2023-01-01T00:00:00", "Total": 615558.23, "A\u00f1o": 2023, "Mes": 1}, {"Fecha": "2023-02-01T00:00:00", "Total": 345506.08, "A\u00f1o": 2023, "Mes": 2}, {"Fecha": "2023-03-01T00:00:00", "Total": 3843939.65, "A\u00f1o": 2023, "Mes": 3}, {"Fecha": "2023-04-01T00:00:00", "Total": 594234.71, "A\u00f1o": 2023, "Mes": 4}, {"Fecha": "2023-05-01T00:00:00", "Total": 1142730.32, "A\u00f1o": 2023, "Mes": 5}, {"Fecha": "2023-06-01T00:00:00", "Total": 351723.61, "A\u00f1o": 2023, "Mes": 6}, {"Fecha": "2023-07-01T00:00:00", "Total": 184742.75, "A\u00f1o": 2023, "Mes": 7}, {"Fecha": "2023-08-01T00:00:00", "Total": 344343.98, "A\u00f1o": 2023, "Mes": 8}, {"Fecha": "2023-09-01T00:00:00", "Total": 280251.75, "A\u00f1o": 2023, "Mes": 9}, {"Fecha": "2023-10-01T00:00:00", "Total": 334531.83, "A\u00f1o": 2023, "Mes": 10}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>Tambien agrupamos por fechas y años para realizar una grafica y datos dinamicos sobre fechas seleccionadas.</p>
+<div class="cell" data-execution_count="95">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>años_disponibles <span class="op">=</span>  data_mxn[<span class="st">'Fecha'</span>].dt.year.unique()</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>clientesprincipales_y  <span class="op">=</span> data_mxn[[<span class="st">'Fecha'</span>, <span class="st">'Razón Social'</span>, <span class="st">'Total'</span>]].reset_index(drop <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">=</span> pd.to_datetime(clientesprincipales_y[<span class="st">'Fecha'</span>])</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">=</span> clientesprincipales_y[<span class="st">'Fecha'</span>].dt.year</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>clientesprincipales_y <span class="op">=</span> clientesprincipales_y.groupby([<span class="st">'Fecha'</span>, <span class="st">'Razón Social'</span>])[<span class="st">'Total'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>clientesprincipales_y <span class="op">=</span> clientesprincipales_y.sort_values(by<span class="op">=</span><span class="st">'Total'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>año_seleccionado <span class="op">=</span> <span class="dv">2023</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>datos_año_seleccionado <span class="op">=</span> clientesprincipales_y[clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">==</span> año_seleccionado].head(<span class="dv">3</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>total_facturacion <span class="op">=</span> clientesprincipales_y.Total.<span class="bu">sum</span>()</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>total_facturacion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="95">
+<pre><code>28585008.459999997</code></pre>
+</div>
+</div>
+<p>Seleccionamos el periodo y creamos grupos para visualizarlos, obtenemos una tabla ademas de una grafica.</p>
+<div class="cell" data-execution_count="96">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>año_inicio <span class="op">=</span> <span class="dv">2022</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>año_fin <span class="op">=</span> <span class="dv">2023</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>datos_años_seleccionados <span class="op">=</span> clientesprincipales_y[(clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">&gt;=</span> <span class="bu">int</span>(año_inicio)) <span class="op">&amp;</span> (clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">&lt;=</span> <span class="bu">int</span>(año_fin))].sort_values(by <span class="op">=</span><span class="st">'Total'</span>, ascending<span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>total_facturacion <span class="op">=</span> clientesprincipales_y[(clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">&gt;=</span> <span class="bu">int</span>(año_inicio)) <span class="op">&amp;</span> (clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">&lt;=</span> <span class="bu">int</span>(año_fin))]</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>total_facturacion <span class="op">=</span> total_facturacion[<span class="st">'Total'</span>].<span class="bu">sum</span>()</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>total_facturacion_del_periodo <span class="op">=</span> clientesprincipales_y.Total.<span class="bu">sum</span>()</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>datos_años_seleccionados[<span class="st">'PorcentajeTotal_Facturacion'</span>] <span class="op">=</span> <span class="bu">round</span>((datos_años_seleccionados[<span class="st">'Total'</span>]  <span class="op">/</span> total_facturacion) <span class="op">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>datos_años_seleccionados_table <span class="op">=</span> datos_años_seleccionados.head()</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>datos_años_seleccionados_table.columns <span class="op">=</span> [<span class="st">'Año'</span>, <span class="st">'Cliente'</span>, <span class="st">'Total'</span>, <span class="st">'Porcentaje Representativo en la Facturación Total'</span>]</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Se generan los grupos con los años seleccionados y los grupos que nos permiten visualizar los clientes principales de los años seleccionados, los clientes más frecuentes son con los qu enos moestrara la siguiente grafica y con la que se hara dinamica.</p>
+<div class="cell" data-execution_count="97">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>total_facturacion <span class="op">=</span> clientesprincipales_y[(clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">&gt;=</span> <span class="bu">int</span>(año_inicio)) <span class="op">&amp;</span> (clientesprincipales_y[<span class="st">'Fecha'</span>] <span class="op">&lt;=</span> <span class="bu">int</span>(año_fin))]</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>total_facturacion <span class="op">=</span> total_facturacion[<span class="st">'Total'</span>].<span class="bu">sum</span>()</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>total_facturacion_del_periodo <span class="op">=</span> clientesprincipales_y.Total.<span class="bu">sum</span>()</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>datos_años_seleccionados[<span class="st">'PorcentajeTotal_Facturacion'</span>] <span class="op">=</span> <span class="bu">round</span>((datos_años_seleccionados[<span class="st">'Total'</span>]  <span class="op">/</span> total_facturacion) <span class="op">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>datos_años_seleccionados_table <span class="op">=</span> datos_años_seleccionados.head()</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>datos_años_seleccionados_table.columns <span class="op">=</span> [<span class="st">'Año'</span>, <span class="st">'Cliente'</span>, <span class="st">'Total'</span>, <span class="st">'Porcentaje Representativo en la Facturación Total'</span>]</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>datos_años_seleccionados_table <span class="op">=</span> datos_años_seleccionados_table.to_html(index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>grupo_clientes_principales <span class="op">=</span> datos_años_seleccionados.groupby(<span class="st">'Razón Social'</span>)[<span class="st">'Total'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>grupo_clientes_principales <span class="op">=</span> grupo_clientes_principales.sort_values(by<span class="op">=</span><span class="st">'Total'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En la grafica se muestra a la dertecha el cliente que más nos ha comprado y se puede modificar cambiando los valores de las variables año_inicio y año_fin. esto también modificara algunos detalles en el link de streamlit.</p>
+<div class="cell" data-execution_count="98">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>grafica_2 <span class="op">=</span> alt.Chart(grupo_clientes_principales.head(<span class="dv">20</span>)).encode(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> alt.X(<span class="st">'Razón Social:O'</span>, title <span class="op">=</span> <span class="st">"Clientes"</span>),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> alt.Y(<span class="st">'Total'</span>, title <span class="op">=</span> <span class="st">"Ventas Totales"</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="dv">700</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>grafica_2 <span class="op">=</span> grafica_2.mark_bar() <span class="op">+</span> grafica_2.mark_text(align <span class="op">=</span>  <span class="st">'left'</span>, dx <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>grafica_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="98">
+
+<style>
+  #altair-viz-639fda0e67c8427796fae7f04179bea9.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-639fda0e67c8427796fae7f04179bea9.vega-embed details,
+  #altair-viz-639fda0e67c8427796fae7f04179bea9.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-639fda0e67c8427796fae7f04179bea9"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-639fda0e67c8427796fae7f04179bea9") {
+      outputDiv = document.getElementById("altair-viz-639fda0e67c8427796fae7f04179bea9");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.15.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "5")
+        .then(() => maybeLoadScript("vega-lite", "5.15.1"))
+        .then(() => maybeLoadScript("vega-embed", "6"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"mark": {"type": "bar"}, "encoding": {"x": {"field": "Total", "title": "Ventas Totales", "type": "quantitative"}, "y": {"field": "Raz\u00f3n Social", "title": "Clientes", "type": "ordinal"}}}, {"mark": {"type": "text", "align": "left", "dx": 0}, "encoding": {"x": {"field": "Total", "title": "Ventas Totales", "type": "quantitative"}, "y": {"field": "Raz\u00f3n Social", "title": "Clientes", "type": "ordinal"}}}], "data": {"name": "data-f0534ecac38a12e342a73ce7174cef10"}, "width": 700, "$schema": "https://vega.github.io/schema/vega-lite/v5.15.1.json", "datasets": {"data-f0534ecac38a12e342a73ce7174cef10": [{"Raz\u00f3n Social": "INMOBILIARIA LLUNA", "Total": 3704479.16}, {"Raz\u00f3n Social": "SAGOT", "Total": 2854666.66}, {"Raz\u00f3n Social": "FUJITA CORPORATION", "Total": 1000531.37}, {"Raz\u00f3n Social": "GERARDO ARREDONDO HERNANDEZ", "Total": 805138.2699999999}, {"Raz\u00f3n Social": "PRODUCTOS FRUGO", "Total": 803227.04}, {"Raz\u00f3n Social": "ESCUELA PREPARATORIA LUIS SPOTA", "Total": 724061.3899999999}, {"Raz\u00f3n Social": "INSTITUTO DEL BAJIO", "Total": 681069.89}, {"Raz\u00f3n Social": "INSTITUTO DE INNOVACION", "Total": 360000.0}, {"Raz\u00f3n Social": "FRUGALMEX", "Total": 269143.21}, {"Raz\u00f3n Social": "IQFRESH TRANSPORT", "Total": 256151.74000000002}, {"Raz\u00f3n Social": "DMW MEXICO DIVISION", "Total": 215180.18999999997}, {"Raz\u00f3n Social": "MIICA", "Total": 212159.81}, {"Raz\u00f3n Social": "REDWINGS", "Total": 209239.65}, {"Raz\u00f3n Social": "DISTRIBUIDORA DE MATERIALES TRIANGULO", "Total": 158867.76}, {"Raz\u00f3n Social": "VITABAJIO", "Total": 155749.93}, {"Raz\u00f3n Social": "TSO Y ASOCIADOS", "Total": 136013.72}, {"Raz\u00f3n Social": "ASOCIACION EDUCATIVA DE SALAMANCA", "Total": 133658.49}, {"Raz\u00f3n Social": "MEGA ASFALTOS", "Total": 122498.32}, {"Raz\u00f3n Social": "VERDURA VERDE DE SANTIAGO", "Total": 113049.71}, {"Raz\u00f3n Social": "ESTRATEGIAS FINANCIERAS Y DE PROTECCION PATRIMONIAL UNIR", "Total": 109135.72}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>En el analisis se usaron las librerias:</p>
+<p>altair==5.1.2 ipython==8.16.1 numpy==1.26.1 pandas==2.1.3 streamlit==1.28.1</p>
+<p>para cada libreria las versiones son las indicadas.</p>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

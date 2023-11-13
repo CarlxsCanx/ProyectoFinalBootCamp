@@ -1,0 +1,72 @@
+---
+title: "Analisis del crecimiento a traves de los ultimos años de una empresa en operaciòn."
+format: html
+---
+
+```{python}
+
+
+from datetime import datetime
+import glob
+import json
+import os
+from pathlib import Path
+import re
+
+from IPython.display import HTML, display
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import missingno as msno
+import numpy as np
+import polars as pl
+import seaborn as sns
+```
+ 
+# Lectura de los datos.
+
+```{python}
+route = "./Data"
+files = [ Path(i) for i in glob.glob(f'{route}/*.csv') ]
+files
+```
+
+```{python}
+dfs = []
+for csv in files:
+    df = pl.read_csv(csv, truncate_ragged_lines= True, try_parse_dates= True)
+    dfs.append(df)
+
+```
+## Tratado, limpeza, selecciòn y nuevos dfs
+
+```{python}
+dfs = [(dfs[i].select( 
+    pl.col('Fecha'),
+    pl.col('Razón Social'),
+    pl.col('Total').cast(pl.Utf8),
+    pl.col('Cancelado').cast(pl.Int64),
+    pl.col('Nombre de la Moneda'),
+    pl.col('Nombre del agente')
+    
+    
+    )) for i in range(len(dfs))]
+```
+```{python}
+```
+```{python}
+data = pl.concat(dfs)
+data['Total'].cast(pl.Float32)
+```
+
+### Eliminamos valores nulos.
+Comparamos y eliminamos valoress nulos de la data correspondiente.
+```{python}
+sample =  data.with_columns(pl.all().drop_nulls())
+display(sample.schema)
+sample.shape
+```
+
+```{python}
+
+```
